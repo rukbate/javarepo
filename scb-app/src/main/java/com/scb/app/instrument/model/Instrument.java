@@ -17,11 +17,7 @@ public abstract class Instrument {
     }
 
     public boolean match(String code) {
-        return this.getValue(mappingKey).equals(code);
-    }
-
-    private boolean hasField(String field) {
-        return fields.containsKey(field) && fields.get(field) != null;
+        return this.hasField(mappingKey) && this.getValue(mappingKey).equals(code);
     }
 
     public String getValue(String field) {
@@ -30,6 +26,10 @@ public abstract class Instrument {
 
     public String getValueOrDefault(String field, String defaultValue) {
         return this.hasField(field) ? this.getValue(field) : defaultValue;
+    }
+
+    private boolean hasField(String field) {
+        return fields.containsKey(field) && fields.get(field) != null;
     }
 
     public void setMappingKey(String key) {
