@@ -19,7 +19,7 @@ public class TradableRule implements Rule {
         }
 
         if(targetInstrument != null) {
-            builder.withTradable(targetInstrument.getValueOrDefault(InstrumentFields.TRADABLE, "TRUE"));
+            builder.withField(InstrumentFields.TRADABLE, targetInstrument.getValueOrDefault(InstrumentFields.TRADABLE, "TRUE"));
         }
     }
 }

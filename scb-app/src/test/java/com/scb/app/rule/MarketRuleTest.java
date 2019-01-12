@@ -1,5 +1,6 @@
 package com.scb.app.rule;
 
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.Instrument;
 import org.junit.Before;
 import org.junit.Test;
@@ -42,7 +43,7 @@ public class MarketRuleTest extends RuleTestBase {
     public void should_set_market_from_matching_instrument() {
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withMarket(eq("PRIME"));
+        verify(builder).withField(eq(InstrumentFields.MARKET), eq("PRIME"));
     }
 
     @Test

@@ -19,7 +19,7 @@ public class MarketRule implements Rule {
         }
 
         if(targetInstrument != null) {
-            builder.withMarket(this.extractMarket(targetInstrument.getValue(InstrumentFields.MARKET)));
+            builder.withField(InstrumentFields.MARKET, this.extractMarket(targetInstrument.getValue(InstrumentFields.MARKET)));
         }
     }
 

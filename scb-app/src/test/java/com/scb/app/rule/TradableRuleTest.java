@@ -1,5 +1,6 @@
 package com.scb.app.rule;
 
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.Instrument;
 import org.junit.Before;
 import org.junit.Test;
@@ -30,7 +31,7 @@ public class TradableRuleTest extends RuleTestBase {
 
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withTradable(eq("FALSE"));
+        verify(builder).withField(eq(InstrumentFields.TRADABLE), eq("FALSE"));
     }
 
     @Test

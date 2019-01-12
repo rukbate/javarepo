@@ -1,6 +1,7 @@
 package com.scb.app;
 
 import com.scb.app.exception.InstrumentException;
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.builder.LmeInstrumentBuilder;
 import com.scb.app.instrument.builder.PrimeInstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
@@ -15,21 +16,21 @@ import java.util.List;
 public class App {
     public static void main( String[] args ) throws InstrumentException {
         Instrument lmeInstrument = new LmeInstrumentBuilder()
-                .withCode("PB_03_2018")
-                .withLastTradingDate("15-03-2018")
-                .withDeliveryDate("17-03-2018")
-                .withMarket("LME_PB")
-                .withLabel("Lead 13 March 2018")
+                .withField(InstrumentFields.CODE, "PB_03_2018")
+                .withField(InstrumentFields.LAST_TRADING_DATE, "15-03-2018")
+                .withField(InstrumentFields.DELIVERY_DATE, "17-03-2018")
+                .withField(InstrumentFields.MARKET, "LME_PB")
+                .withField(InstrumentFields.LABEL, "Lead 13 March 2018")
                 .build();
 
         Instrument primeInstrument = new PrimeInstrumentBuilder()
-                .withCode("PRIME_PB_03_2018")
-                .withExchangeCode("PB_03_2018")
-                .withLastTradingDate("14-03-2018")
-                .withDeliveryDate("18-03-2018")
-                .withMarket("LME_PB")
-                .withLabel("Lead 13 March 2018")
-                .withTradable("FALSE")
+                .withField(InstrumentFields.CODE, "PRIME_PB_03_2018")
+                .withField(InstrumentFields.EXCHANGE_CODE, "PB_03_2018")
+                .withField(InstrumentFields.LAST_TRADING_DATE, "14-03-2018")
+                .withField(InstrumentFields.DELIVERY_DATE, "18-03-2018")
+                .withField(InstrumentFields.MARKET, "LME_PB")
+                .withField(InstrumentFields.LABEL, "Lead 13 March 2018")
+                .withField(InstrumentFields.TRADABLE, "FALSE")
                 .build();
 
         Rule lastTradingDateAndDeliveryDateRule = new LastTradingDateAndDeliveryDateRule();

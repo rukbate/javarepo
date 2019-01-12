@@ -3,10 +3,11 @@ package com.scb.app.service;
 import com.scb.app.exception.InstrumentException;
 import com.scb.app.exception.NoMatchedInstrumentException;
 import com.scb.app.exception.UnknownExchangeException;
+import com.scb.app.instrument.InstrumentFields;
+import com.scb.app.instrument.InstrumentType;
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.builder.StandardInstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
-import com.scb.app.instrument.InstrumentType;
 import com.scb.app.rule.Rule;
 
 import java.util.List;
@@ -20,11 +21,7 @@ public class AggregateService implements InstrumentService {
     private Set<Instrument> instruments = ConcurrentHashMap.newKeySet(10);
     private List<Rule> rules = new CopyOnWriteArrayList<>();
 
-    public AggregateService() {
-    }
-
     public AggregateService(List<Rule> rules, List<Instrument> instruments) {
-        this();
         this.instruments.addAll(instruments);
         this.rules.addAll(rules);
     }
@@ -53,7 +50,7 @@ public class AggregateService implements InstrumentService {
             throw new NoMatchedInstrumentException();
         }
 
-        InstrumentBuilder builder = new StandardInstrumentBuilder().withCode(code);
+        InstrumentBuilder builder = new StandardInstrumentBuilder().withField(InstrumentFields.CODE, code);
 
         rules.forEach(rule -> rule.apply(exchange, matchInstruments, builder));
         return builder.build();

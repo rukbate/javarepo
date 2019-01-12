@@ -1,5 +1,6 @@
 package com.scb.app.rule;
 
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.Instrument;
 import org.junit.Before;
 import org.junit.Test;
@@ -28,8 +29,8 @@ public class LastTradingDateAndDeliveryDateRuleTest extends RuleTestBase {
 
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withLastTradingDate("14-03-2018");
-        verify(builder).withDeliveryDate("18-03-2018");
+        verify(builder).withField(eq(InstrumentFields.LAST_TRADING_DATE), eq("14-03-2018"));
+        verify(builder).withField(eq(InstrumentFields.DELIVERY_DATE), eq("18-03-2018"));
     }
 
     @Test
@@ -40,8 +41,8 @@ public class LastTradingDateAndDeliveryDateRuleTest extends RuleTestBase {
 
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withLastTradingDate(eq("15-03-2018"));
-        verify(builder).withDeliveryDate(eq("17-03-2018"));
+        verify(builder).withField(eq(InstrumentFields.LAST_TRADING_DATE), eq("15-03-2018"));
+        verify(builder).withField(eq(InstrumentFields.DELIVERY_DATE), eq("17-03-2018"));
     }
 
     @Test
