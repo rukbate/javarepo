@@ -11,7 +11,7 @@ public class LmeInstrument extends Instrument {
     }
 
     @Override
-    public boolean match(String code) {
-        return this.getCode().equals(code);
+    String getMappingKey() {
+        return this.getCode();
     }
 }

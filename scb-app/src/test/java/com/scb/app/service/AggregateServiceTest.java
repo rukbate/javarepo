@@ -4,8 +4,8 @@ import com.scb.app.exception.InstrumentException;
 import com.scb.app.exception.MissingFieldException;
 import com.scb.app.exception.NoMatchedInstrumentException;
 import com.scb.app.exception.UnknownExchangeException;
-import com.scb.app.instrument.model.Instrument;
 import com.scb.app.instrument.InstrumentType;
+import com.scb.app.instrument.model.Instrument;
 import com.scb.app.instrument.model.LmeInstrument;
 import com.scb.app.instrument.model.PrimeInstrument;
 import com.scb.app.rule.*;
@@ -22,10 +22,6 @@ import static org.junit.Assert.*;
 public class AggregateServiceTest {
 
     private InstrumentService engine;
-
-    private List<Instrument> instruments;
-
-    private List<Rule> rules;
 
     private Rule defaultRule;
 
@@ -45,20 +41,16 @@ public class AggregateServiceTest {
                 "PB_03_2018",
                 false);
 
-        instruments = new ArrayList<>(8);
+        List<Instrument> instruments = new ArrayList<>(8);
         instruments.add(lmeInstrument);
         instruments.add(primeInstrument);
 
-        Rule lastTradingDateAndDeliveryDateRule = new LastTradingDateAndDeliveryDateRule();
-        Rule tradableRule = new TradableRule();
-        Rule marketRule = new MarketRule();
+        List<Rule> rules = new LinkedList<>();
+        rules.add(new LastTradingDateAndDeliveryDateRule());
+        rules.add(new TradableRule());
+        rules.add(new MarketRule());
+
         defaultRule = new DefaultRule();
-
-        rules = new LinkedList<>();
-        rules.add(lastTradingDateAndDeliveryDateRule);
-        rules.add(tradableRule);
-        rules.add(marketRule);
-
         engine = new AggregateService(rules, instruments);
     }
 
@@ -99,6 +91,7 @@ public class AggregateServiceTest {
     @Test
     public void should_set_fields_correctly_when_prime_publishes() throws InstrumentException {
         engine.addRule(defaultRule);
+
         Instrument instrument = engine.publish("PRIME", "PB_03_2018");
         assertEquals(InstrumentType.STANDARD, instrument.getType());
         assertEquals("PB_03_2018", instrument.getCode());

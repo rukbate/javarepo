@@ -14,8 +14,8 @@ public class PrimeInstrument extends Instrument {
     }
 
     @Override
-    public boolean match(String code) {
-        return this.exchangeCode.equals(code);
+    String getMappingKey() {
+        return this.getExchangeCode();
     }
 
     public String getExchangeCode() {

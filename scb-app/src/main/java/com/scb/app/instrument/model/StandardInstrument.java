@@ -11,8 +11,7 @@ public class StandardInstrument extends Instrument {
     }
 
     @Override
-    public boolean match(String code) {
-        return false;
+    String getMappingKey() {
+        return this.getCode();
     }
-
 }

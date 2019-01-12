@@ -23,7 +23,11 @@ public abstract class Instrument {
         this.tradable = tradable;
     }
 
-    public abstract boolean match(String code);
+    public boolean match(String code) {
+        return this.getMappingKey().equals(code);
+    }
+
+    abstract String getMappingKey();
 
     public InstrumentType getType() {
         return type;
