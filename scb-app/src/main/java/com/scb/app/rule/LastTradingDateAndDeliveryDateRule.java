@@ -3,6 +3,7 @@ package com.scb.app.rule;
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
 import com.scb.app.instrument.InstrumentType;
+import com.scb.app.instrument.InstrumentFields;
 
 import java.util.List;
 
@@ -28,8 +29,8 @@ public class LastTradingDateAndDeliveryDateRule implements Rule {
         }
 
         if(targetInstrument != null) {
-            builder.withLastTradingDate(targetInstrument.getLastTradingDate());
-            builder.withDeliveryDate(targetInstrument.getDeliveryDate());
+            builder.withLastTradingDate(targetInstrument.getValue(InstrumentFields.LAST_TRADING_DATE));
+            builder.withDeliveryDate(targetInstrument.getValue(InstrumentFields.DELIVERY_DATE));
         }
     }
 }

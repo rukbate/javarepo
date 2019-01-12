@@ -6,18 +6,16 @@ import com.scb.app.exception.NoMatchedInstrumentException;
 import com.scb.app.exception.UnknownExchangeException;
 import com.scb.app.instrument.InstrumentType;
 import com.scb.app.instrument.model.Instrument;
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.LmeInstrument;
 import com.scb.app.instrument.model.PrimeInstrument;
 import com.scb.app.rule.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 public class AggregateServiceTest {
 
@@ -27,19 +25,23 @@ public class AggregateServiceTest {
 
     @Before
     public void setUp() {
-        Instrument lmeInstrument = new LmeInstrument("PB_03_2018",
-                LocalDate.of(2018, 3, 15),
-                LocalDate.of(2018, 3, 17),
-                "PB_LME",
-                "Lead 13 March 2018");
+        Map<String, String> lmeFields = new HashMap<>(8);
+        lmeFields.put(InstrumentFields.CODE, "PB_03_2018");
+        lmeFields.put(InstrumentFields.LAST_TRADING_DATE, "15-03-2018");
+        lmeFields.put(InstrumentFields.DELIVERY_DATE, "17-03-2018");
+        lmeFields.put(InstrumentFields.MARKET, "PB_LME");
+        lmeFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
+        Instrument lmeInstrument = new LmeInstrument(lmeFields);
 
-        Instrument primeInstrument = new PrimeInstrument("PRIME_PB_03_2018",
-                LocalDate.of(2018, 3, 14),
-                LocalDate.of(2018, 3, 18),
-                "PB_PRIME",
-                "Lead 13 March 2018",
-                "PB_03_2018",
-                false);
+        Map<String, String> primeFields = new HashMap<>(8);
+        primeFields.put(InstrumentFields.CODE, "PRIME_PB_03_2018");
+        primeFields.put(InstrumentFields.LAST_TRADING_DATE, "14-03-2018");
+        primeFields.put(InstrumentFields.DELIVERY_DATE, "18-03-2018");
+        primeFields.put(InstrumentFields.MARKET, "PB_PRIME");
+        primeFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
+        primeFields.put(InstrumentFields.EXCHANGE_CODE, "PB_03_2018");
+        primeFields.put(InstrumentFields.TRADABLE, "FALSE");
+        Instrument primeInstrument = new PrimeInstrument(primeFields);
 
         List<Instrument> instruments = new ArrayList<>(8);
         instruments.add(lmeInstrument);
@@ -80,12 +82,12 @@ public class AggregateServiceTest {
 
         Instrument instrument = engine.publish("LME", "PB_03_2018");
         assertEquals(InstrumentType.STANDARD, instrument.getType());
-        assertEquals("PB_03_2018", instrument.getCode());
-        assertEquals(LocalDate.of(2018, 3, 15), instrument.getLastTradingDate());
-        assertEquals(LocalDate.of(2018, 3, 17), instrument.getDeliveryDate());
-        assertEquals("LME", instrument.getMarket());
-        assertEquals("Lead 13 March 2018", instrument.getLabel());
-        assertTrue(instrument.isTradable());
+        assertEquals("PB_03_2018", instrument.getValue(InstrumentFields.CODE));
+        assertEquals("15-03-2018", instrument.getValue(InstrumentFields.LAST_TRADING_DATE));
+        assertEquals("17-03-2018", instrument.getValue(InstrumentFields.DELIVERY_DATE));
+        assertEquals("LME", instrument.getValue(InstrumentFields.MARKET));
+        assertEquals("Lead 13 March 2018", instrument.getValue(InstrumentFields.LABEL));
+        assertEquals("TRUE", instrument.getValue(InstrumentFields.TRADABLE));
     }
 
     @Test
@@ -94,11 +96,11 @@ public class AggregateServiceTest {
 
         Instrument instrument = engine.publish("PRIME", "PB_03_2018");
         assertEquals(InstrumentType.STANDARD, instrument.getType());
-        assertEquals("PB_03_2018", instrument.getCode());
-        assertEquals(LocalDate.of(2018, 3, 15), instrument.getLastTradingDate());
-        assertEquals(LocalDate.of(2018, 3, 17), instrument.getDeliveryDate());
-        assertEquals("PRIME", instrument.getMarket());
-        assertEquals("Lead 13 March 2018", instrument.getLabel());
-        assertFalse(instrument.isTradable());
+        assertEquals("PB_03_2018", instrument.getValue(InstrumentFields.CODE));
+        assertEquals("15-03-2018", instrument.getValue(InstrumentFields.LAST_TRADING_DATE));
+        assertEquals("17-03-2018", instrument.getValue(InstrumentFields.DELIVERY_DATE));
+        assertEquals("PRIME", instrument.getValue(InstrumentFields.MARKET));
+        assertEquals("Lead 13 March 2018", instrument.getValue(InstrumentFields.LABEL));
+        assertEquals("FALSE", instrument.getValue(InstrumentFields.TRADABLE));
     }
 }

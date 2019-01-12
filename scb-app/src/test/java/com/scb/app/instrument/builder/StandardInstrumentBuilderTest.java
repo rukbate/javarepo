@@ -2,12 +2,10 @@ package com.scb.app.instrument.builder;
 
 import com.scb.app.exception.InstrumentException;
 import com.scb.app.exception.MissingFieldException;
-import com.scb.app.instrument.model.Instrument;
 import com.scb.app.instrument.InstrumentType;
+import com.scb.app.instrument.model.Instrument;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.time.LocalDate;
 
 import static org.junit.Assert.*;
 
@@ -23,14 +21,14 @@ public class StandardInstrumentBuilderTest {
     @Test
     public void testValidate() {
         builder.withCode("Code")
-                .withLastTradingDate(LocalDate.of(2018, 3, 14))
-                .withDeliveryDate(LocalDate.of(2018, 3, 17));
+                .withLastTradingDate("14-03-2018")
+                .withDeliveryDate("17-03-2018");
 
         assertFalse(builder.validate());
 
         builder.withMarket("PB")
                 .withLabel("label")
-                .withTradable(Boolean.FALSE);
+                .withTradable("FALSE");
 
         assertTrue(builder.validate());
     }
@@ -38,19 +36,19 @@ public class StandardInstrumentBuilderTest {
     @Test(expected = MissingFieldException.class)
     public void should_throw_exception_if_missing_field() throws InstrumentException {
         builder.withCode("Code")
-                .withLastTradingDate(LocalDate.of(2018, 3, 14))
-                .withDeliveryDate(LocalDate.of(2018, 3, 17))
+                .withLastTradingDate("14-03-2018")
+                .withDeliveryDate("17-03-2018")
                 .build();
     }
 
     @Test
     public void should_build_instrument() throws InstrumentException {
         Instrument instrument = builder.withCode("Code")
-                .withLastTradingDate(LocalDate.of(2018, 3, 14))
-                .withDeliveryDate(LocalDate.of(2018, 3, 17))
+                .withLastTradingDate("14-03-2018")
+                .withDeliveryDate("17-03-2018")
                 .withMarket("PB")
                 .withLabel("label")
-                .withTradable(Boolean.FALSE)
+                .withTradable("FALSE")
                 .build();
 
         assertNotNull(instrument);

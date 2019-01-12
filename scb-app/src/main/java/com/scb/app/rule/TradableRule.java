@@ -2,6 +2,7 @@ package com.scb.app.rule;
 
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
+import com.scb.app.instrument.InstrumentFields;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class TradableRule implements Rule {
         }
 
         if(targetInstrument != null) {
-            builder.withTradable(targetInstrument.isTradable());
+            builder.withTradable(targetInstrument.getValueOrDefault(InstrumentFields.TRADABLE, "TRUE"));
         }
     }
 }

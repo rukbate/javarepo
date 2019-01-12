@@ -2,6 +2,7 @@ package com.scb.app.rule;
 
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
+import com.scb.app.instrument.InstrumentFields;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ public class MarketRule implements Rule {
         }
 
         if(targetInstrument != null) {
-            builder.withMarket(this.extractMarket(targetInstrument.getMarket()));
+            builder.withMarket(this.extractMarket(targetInstrument.getValue(InstrumentFields.MARKET)));
         }
     }
 

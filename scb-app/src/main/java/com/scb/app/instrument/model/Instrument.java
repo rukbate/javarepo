@@ -1,70 +1,53 @@
 package com.scb.app.instrument.model;
 
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.InstrumentType;
 
-import java.time.LocalDate;
+import java.util.Map;
 
 public abstract class Instrument {
     private final InstrumentType type;
-    private final String code;
-    private final LocalDate lastTradingDate;
-    private final LocalDate deliveryDate;
-    private final String market;
-    private final String label;
-    private final boolean tradable;
+    private final Map<String, String> fields;
+    private String mappingKey;
 
-    public Instrument(InstrumentType type, String code, LocalDate lastTradingDate, LocalDate deliveryDate, String market, String label, boolean tradable) {
+    public Instrument(InstrumentType type, Map<String, String> fields) {
         this.type = type;
-        this.code = code;
-        this.lastTradingDate = lastTradingDate;
-        this.deliveryDate = deliveryDate;
-        this.market = market;
-        this.label = label;
-        this.tradable = tradable;
+        this.fields = fields;
+        mappingKey = InstrumentFields.CODE;
     }
 
     public boolean match(String code) {
-        return this.getMappingKey().equals(code);
+        return this.getValue(mappingKey).equals(code);
     }
 
-    abstract String getMappingKey();
+    private boolean hasField(String field) {
+        return fields.containsKey(field) && fields.get(field) != null;
+    }
+
+    public String getValue(String field) {
+        return this.fields.get(field);
+    }
+
+    public String getValueOrDefault(String field, String defaultValue) {
+        return this.hasField(field) ? this.getValue(field) : defaultValue;
+    }
+
+    public void setMappingKey(String key) {
+        this.mappingKey = key;
+    }
 
     public InstrumentType getType() {
         return type;
     }
 
-    public String getCode() {
-        return code;
-    }
-
-    public LocalDate getLastTradingDate() {
-        return lastTradingDate;
-    }
-
-    public LocalDate getDeliveryDate() {
-        return deliveryDate;
-    }
-
-    public String getMarket() {
-        return market;
-    }
-
-    public String getLabel() {
-        return label;
-    }
-
-    public boolean isTradable() {
-        return tradable;
-    }
-
     @Override
     public String toString() {
         return "Instrument{" +
-                "lastTradingDate=" + lastTradingDate +
-                ", deliveryDate=" + deliveryDate +
-                ", market='" + market + '\'' +
-                ", label='" + label + '\'' +
-                ", tradable=" + tradable +
+                InstrumentFields.LAST_TRADING_DATE + "=" + this.getValue(InstrumentFields.LAST_TRADING_DATE) +
+                ", " + InstrumentFields.DELIVERY_DATE + "=" + this.getValue(InstrumentFields.DELIVERY_DATE) +
+                ", " + InstrumentFields.MARKET + "='" + this.getValue(InstrumentFields.MARKET) + '\'' +
+                ", " + InstrumentFields.LABEL + "='" + this.getValue(InstrumentFields.LABEL) + '\'' +
+                ", " + InstrumentFields.TRADABLE + "='" + this.getValue(InstrumentFields.TRADABLE) + '\'' +
                 '}';
     }
 }

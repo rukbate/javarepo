@@ -8,7 +8,6 @@ import com.scb.app.rule.*;
 import com.scb.app.service.AggregateService;
 import com.scb.app.service.InstrumentService;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,8 +16,8 @@ public class App {
     public static void main( String[] args ) throws InstrumentException {
         Instrument lmeInstrument = new LmeInstrumentBuilder()
                 .withCode("PB_03_2018")
-                .withLastTradingDate(LocalDate.of(2018, 3, 15))
-                .withDeliveryDate(LocalDate.of(2018, 3, 17))
+                .withLastTradingDate("15-03-2018")
+                .withDeliveryDate("17-03-2018")
                 .withMarket("LME_PB")
                 .withLabel("Lead 13 March 2018")
                 .build();
@@ -26,11 +25,11 @@ public class App {
         Instrument primeInstrument = new PrimeInstrumentBuilder()
                 .withCode("PRIME_PB_03_2018")
                 .withExchangeCode("PB_03_2018")
-                .withLastTradingDate(LocalDate.of(2018, 3, 14))
-                .withDeliveryDate(LocalDate.of(2018, 3, 18))
+                .withLastTradingDate("14-03-2018")
+                .withDeliveryDate("18-03-2018")
                 .withMarket("LME_PB")
                 .withLabel("Lead 13 March 2018")
-                .withTradable(false)
+                .withTradable("FALSE")
                 .build();
 
         Rule lastTradingDateAndDeliveryDateRule = new LastTradingDateAndDeliveryDateRule();

@@ -30,7 +30,7 @@ public class TradableRuleTest extends RuleTestBase {
 
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withTradable(eq(false));
+        verify(builder).withTradable(eq("FALSE"));
     }
 
     @Test

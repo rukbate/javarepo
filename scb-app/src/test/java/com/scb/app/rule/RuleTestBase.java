@@ -2,12 +2,14 @@ package com.scb.app.rule;
 
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.LmeInstrument;
 import com.scb.app.instrument.model.PrimeInstrument;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDate;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class RuleTestBase {
 
@@ -20,18 +22,23 @@ public abstract class RuleTestBase {
 
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        lmeInstrument = new LmeInstrument("PB_03_2018",
-                LocalDate.of(2018, 3, 15),
-                LocalDate.of(2018, 3, 17),
-                "PB_LME",
-                "Lead 13 March 2018");
 
-        primeInstrument = new PrimeInstrument("PRIME_PB_03_2018",
-                LocalDate.of(2018, 3, 14),
-                LocalDate.of(2018, 3, 18),
-                "PB_PRIME",
-                "Lead 13 March 2018",
-                "PB_03_2018",
-                false);
+        Map<String, String> lmeFields = new HashMap<>(8);
+        lmeFields.put(InstrumentFields.CODE, "PB_03_2018");
+        lmeFields.put(InstrumentFields.LAST_TRADING_DATE, "15-03-2018");
+        lmeFields.put(InstrumentFields.DELIVERY_DATE, "17-03-2018");
+        lmeFields.put(InstrumentFields.MARKET, "PB_LME");
+        lmeFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
+        lmeInstrument = new LmeInstrument(lmeFields);
+
+        Map<String, String> primeFields = new HashMap<>(8);
+        primeFields.put(InstrumentFields.CODE, "PRIME_PB_03_2018");
+        primeFields.put(InstrumentFields.LAST_TRADING_DATE, "14-03-2018");
+        primeFields.put(InstrumentFields.DELIVERY_DATE, "18-03-2018");
+        primeFields.put(InstrumentFields.MARKET, "PB_PRIME");
+        primeFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
+        primeFields.put(InstrumentFields.EXCHANGE_CODE, "PB_03_2018");
+        primeFields.put(InstrumentFields.TRADABLE, "FALSE");
+        primeInstrument = new PrimeInstrument(primeFields);
     }
 }

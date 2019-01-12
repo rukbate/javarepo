@@ -1,13 +1,9 @@
 package com.scb.app.rule;
 
 import com.scb.app.instrument.model.Instrument;
-import com.scb.app.instrument.model.LmeInstrument;
-import com.scb.app.instrument.model.PrimeInstrument;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockitoAnnotations;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,8 +28,8 @@ public class LastTradingDateAndDeliveryDateRuleTest extends RuleTestBase {
 
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withLastTradingDate(LocalDate.of(2018, 3, 14));
-        verify(builder).withDeliveryDate(LocalDate.of(2018, 3, 18));
+        verify(builder).withLastTradingDate("14-03-2018");
+        verify(builder).withDeliveryDate("18-03-2018");
     }
 
     @Test
@@ -44,8 +40,8 @@ public class LastTradingDateAndDeliveryDateRuleTest extends RuleTestBase {
 
         rule.apply("PRIME", instruments, builder);
 
-        verify(builder).withLastTradingDate(eq(LocalDate.of(2018, 3, 15)));
-        verify(builder).withDeliveryDate(eq(LocalDate.of(2018, 3, 17)));
+        verify(builder).withLastTradingDate(eq("15-03-2018"));
+        verify(builder).withDeliveryDate(eq("17-03-2018"));
     }
 
     @Test

@@ -4,17 +4,15 @@ import com.scb.app.exception.InstrumentException;
 import com.scb.app.exception.MissingFieldException;
 import com.scb.app.instrument.model.Instrument;
 
-import java.time.LocalDate;
-
 public abstract class InstrumentBuilder {
 
     private String code;
-    private LocalDate lastTradingDate;
-    private LocalDate deliveryDate;
+    private String lastTradingDate;
+    private String deliveryDate;
     private String market;
     private String label;
     private String exchangeCode;
-    private Boolean tradable;
+    private String tradable;
 
     public Instrument build() throws InstrumentException {
         if(!this.validate()) {
@@ -33,12 +31,12 @@ public abstract class InstrumentBuilder {
         return this;
     }
 
-    public InstrumentBuilder withLastTradingDate(LocalDate lastTradingDate) {
+    public InstrumentBuilder withLastTradingDate(String lastTradingDate) {
         this.lastTradingDate = lastTradingDate;
         return this;
     }
 
-    public InstrumentBuilder withDeliveryDate(LocalDate deliveryDate) {
+    public InstrumentBuilder withDeliveryDate(String deliveryDate) {
         this.deliveryDate = deliveryDate;
         return this;
     }
@@ -58,7 +56,7 @@ public abstract class InstrumentBuilder {
         return this;
     }
 
-    public InstrumentBuilder withTradable(Boolean tradable) {
+    public InstrumentBuilder withTradable(String tradable) {
         this.tradable = tradable;
         return this;
     }
@@ -95,11 +93,11 @@ public abstract class InstrumentBuilder {
         return code;
     }
 
-    LocalDate getLastTradingDate() {
+    String getLastTradingDate() {
         return lastTradingDate;
     }
 
-    LocalDate getDeliveryDate() {
+    String getDeliveryDate() {
         return deliveryDate;
     }
 
@@ -115,7 +113,7 @@ public abstract class InstrumentBuilder {
         return exchangeCode;
     }
 
-    Boolean getTradable() {
+    String getTradable() {
         return tradable;
     }
 }
