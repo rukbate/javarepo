@@ -10,27 +10,21 @@ import java.util.List;
 public class LastTradingDateAndDeliveryDateRule implements Rule {
 
     @Override
-    public void apply(String exchange, List<Instrument> components, InstrumentBuilder builder) {
-        Instrument lmeInstrument = null;
+    public void apply(Instrument instrument, List<Instrument> existingInstruments, InstrumentBuilder builder) {
         Instrument targetInstrument = null;
 
-        for(Instrument instrument: components) {
-            if (instrument.getType() == InstrumentType.LME) {
-                lmeInstrument = instrument;
-            }
-
-            if (instrument.getType().name().equals(exchange)) {
-                targetInstrument = instrument;
+        for(Instrument ins: existingInstruments) {
+            if (ins.getType() == InstrumentType.LME) {
+                targetInstrument = ins;
+                break;
             }
         }
 
-        if (lmeInstrument != null) {
-            targetInstrument = lmeInstrument;
+        if (targetInstrument == null) {
+            targetInstrument = instrument;
         }
 
-        if(targetInstrument != null) {
-            builder.withField(InstrumentFields.LAST_TRADING_DATE, targetInstrument.getValue(InstrumentFields.LAST_TRADING_DATE));
-            builder.withField(InstrumentFields.DELIVERY_DATE, targetInstrument.getValue(InstrumentFields.DELIVERY_DATE));
-        }
+        builder.withField(InstrumentFields.LAST_TRADING_DATE, targetInstrument.getValue(InstrumentFields.LAST_TRADING_DATE));
+        builder.withField(InstrumentFields.DELIVERY_DATE, targetInstrument.getValue(InstrumentFields.DELIVERY_DATE));
     }
 }

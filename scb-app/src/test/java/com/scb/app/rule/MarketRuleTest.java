@@ -12,7 +12,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class MarketRuleTest extends RuleTestBase {
 
@@ -27,7 +26,6 @@ public class MarketRuleTest extends RuleTestBase {
 
         instruments = new ArrayList<>(8);
         instruments.add(lmeInstrument);
-        instruments.add(primeInstrument);
     }
 
     @Test
@@ -40,16 +38,9 @@ public class MarketRuleTest extends RuleTestBase {
     }
 
     @Test
-    public void should_set_market_from_matching_instrument() {
-        rule.apply("PRIME", instruments, builder);
+    public void should_set_market_from_input_instrument() {
+        rule.apply(primeInstrument, instruments, builder);
 
         verify(builder).withField(eq(InstrumentFields.MARKET), eq("PRIME"));
-    }
-
-    @Test
-    public void should_not_set_market_if_no_matching_instrument() {
-        rule.apply("PB", instruments, builder);
-
-        verifyZeroInteractions(builder);
     }
 }

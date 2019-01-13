@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface Rule {
 
-    void apply(String exchange, List<Instrument> components, InstrumentBuilder builder);
+    void apply(Instrument instrument, List<Instrument> existingInstruments, InstrumentBuilder builder);
 
 }

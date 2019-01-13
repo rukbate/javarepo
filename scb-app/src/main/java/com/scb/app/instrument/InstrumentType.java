@@ -20,4 +20,8 @@ public enum InstrumentType {
 
         return null;
     }
+
+    public boolean isExchange() {
+        return exchange;
+    }
 }

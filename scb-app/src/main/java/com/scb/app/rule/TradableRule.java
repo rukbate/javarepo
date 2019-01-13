@@ -1,25 +1,15 @@
 package com.scb.app.rule;
 
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
-import com.scb.app.instrument.InstrumentFields;
 
 import java.util.List;
 
 public class TradableRule implements Rule {
 
     @Override
-    public void apply(String exchange, List<Instrument> components, InstrumentBuilder builder) {
-        Instrument targetInstrument = null;
-
-        for(Instrument instrument: components) {
-            if (instrument.getType().name().equals(exchange)) {
-                targetInstrument = instrument;
-            }
-        }
-
-        if(targetInstrument != null) {
-            builder.withField(InstrumentFields.TRADABLE, targetInstrument.getValueOrDefault(InstrumentFields.TRADABLE, "TRUE"));
-        }
+    public void apply(Instrument instrument, List<Instrument> existingInstruments, InstrumentBuilder builder) {
+        builder.withField(InstrumentFields.TRADABLE, instrument.getValueOrDefault(InstrumentFields.TRADABLE, "TRUE"));
     }
 }

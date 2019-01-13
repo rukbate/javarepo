@@ -36,6 +36,10 @@ public abstract class Instrument {
         this.mappingKey = key;
     }
 
+    public String getMappingValue() {
+        return this.getValueOrDefault(this.mappingKey, null);
+    }
+
     public InstrumentType getType() {
         return type;
     }

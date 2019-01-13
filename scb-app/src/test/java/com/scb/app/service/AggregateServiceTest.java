@@ -2,18 +2,21 @@ package com.scb.app.service;
 
 import com.scb.app.exception.InstrumentException;
 import com.scb.app.exception.MissingFieldException;
-import com.scb.app.exception.NoMatchedInstrumentException;
 import com.scb.app.exception.UnknownExchangeException;
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.InstrumentType;
 import com.scb.app.instrument.model.Instrument;
-import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.LmeInstrument;
 import com.scb.app.instrument.model.PrimeInstrument;
+import com.scb.app.instrument.model.StandardInstrument;
 import com.scb.app.rule.*;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 
@@ -23,6 +26,12 @@ public class AggregateServiceTest {
 
     private Rule defaultRule;
 
+    private Instrument lmeInstrument;
+
+    private Instrument primeInstrument;
+
+    private Instrument standardInstrument;
+
     @Before
     public void setUp() {
         Map<String, String> lmeFields = new HashMap<>(8);
@@ -31,7 +40,7 @@ public class AggregateServiceTest {
         lmeFields.put(InstrumentFields.DELIVERY_DATE, "17-03-2018");
         lmeFields.put(InstrumentFields.MARKET, "PB_LME");
         lmeFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
-        Instrument lmeInstrument = new LmeInstrument(lmeFields);
+        lmeInstrument = new LmeInstrument(lmeFields);
 
         Map<String, String> primeFields = new HashMap<>(8);
         primeFields.put(InstrumentFields.CODE, "PRIME_PB_03_2018");
@@ -41,11 +50,15 @@ public class AggregateServiceTest {
         primeFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
         primeFields.put(InstrumentFields.EXCHANGE_CODE, "PB_03_2018");
         primeFields.put(InstrumentFields.TRADABLE, "FALSE");
-        Instrument primeInstrument = new PrimeInstrument(primeFields);
+        primeInstrument = new PrimeInstrument(primeFields);
 
-        List<Instrument> instruments = new ArrayList<>(8);
-        instruments.add(lmeInstrument);
-        instruments.add(primeInstrument);
+        Map<String, String> standardFields = new HashMap<>(8);
+        standardFields.put(InstrumentFields.CODE, "PB_03_2018");
+        standardFields.put(InstrumentFields.LAST_TRADING_DATE, "15-03-2018");
+        standardFields.put(InstrumentFields.DELIVERY_DATE, "17-03-2018");
+        standardFields.put(InstrumentFields.MARKET, "PB_LME");
+        standardFields.put(InstrumentFields.LABEL, "Lead 13 March 2018");
+        standardInstrument = new StandardInstrument(standardFields);
 
         List<Rule> rules = new LinkedList<>();
         rules.add(new LastTradingDateAndDeliveryDateRule());
@@ -53,34 +66,24 @@ public class AggregateServiceTest {
         rules.add(new MarketRule());
 
         defaultRule = new DefaultRule();
-        engine = new AggregateService(rules, instruments);
-    }
-
-    @Test(expected = UnknownExchangeException.class)
-    public void should_throw_exception_for_unknown_exchange() throws InstrumentException {
-        engine.publish("UNKNOWN", "PB_03_2018");
+        engine = new AggregateService(rules);
     }
 
     @Test(expected = UnknownExchangeException.class)
     public void should_throw_exception_for_standard_exchange() throws InstrumentException {
-        engine.publish("STANDARD", "PB_03_2018");
-    }
-
-    @Test(expected = NoMatchedInstrumentException.class)
-    public void should_throw_exception_for_no_matched_instrument() throws InstrumentException {
-        engine.publish("LME", "DUMMY_CODE");
+        engine.publish(standardInstrument);
     }
 
     @Test(expected = MissingFieldException.class)
     public void should_throw_exception_if_missing_rule() throws InstrumentException {
-        engine.publish("LME", "PB_03_2018");
+        engine.publish(lmeInstrument);
     }
 
     @Test
     public void should_set_fields_correctly_when_lme_publishes() throws InstrumentException {
         engine.addRule(defaultRule);
 
-        Instrument instrument = engine.publish("LME", "PB_03_2018");
+        Instrument instrument = engine.publish(lmeInstrument);
         assertEquals(InstrumentType.STANDARD, instrument.getType());
         assertEquals("PB_03_2018", instrument.getValue(InstrumentFields.CODE));
         assertEquals("15-03-2018", instrument.getValue(InstrumentFields.LAST_TRADING_DATE));
@@ -94,7 +97,8 @@ public class AggregateServiceTest {
     public void should_set_fields_correctly_when_prime_publishes() throws InstrumentException {
         engine.addRule(defaultRule);
 
-        Instrument instrument = engine.publish("PRIME", "PB_03_2018");
+        engine.publish(lmeInstrument);
+        Instrument instrument = engine.publish(primeInstrument);
         assertEquals(InstrumentType.STANDARD, instrument.getType());
         assertEquals("PB_03_2018", instrument.getValue(InstrumentFields.CODE));
         assertEquals("15-03-2018", instrument.getValue(InstrumentFields.LAST_TRADING_DATE));

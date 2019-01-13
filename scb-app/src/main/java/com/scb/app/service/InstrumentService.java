@@ -8,7 +8,5 @@ public interface InstrumentService {
 
     void addRule(Rule rule);
 
-    void addInstrument(Instrument instrument);
-
-    Instrument publish(String exchange, String code) throws InstrumentException;
+    Instrument publish(Instrument instrument) throws InstrumentException;
 }

@@ -23,29 +23,26 @@ public class DefaultRuleTest extends RuleTestBase {
         rule = new DefaultRule();
 
         instruments = new ArrayList<>(8);
-        instruments.add(lmeInstrument);
-        instruments.add(primeInstrument);
 
         when(builder.hasField(InstrumentFields.LAST_TRADING_DATE)).thenReturn(Boolean.TRUE);
         when(builder.hasField(InstrumentFields.DELIVERY_DATE)).thenReturn(Boolean.TRUE);
-        when(builder.hasField(InstrumentFields.TRADABLE)).thenReturn(Boolean.TRUE);
     }
 
     @Test
-    public void should_set_null_fields_from_matching_instrument() {
-        rule.apply("PRIME", instruments, builder);
+    public void should_set_null_fields_from_input_instrument() {
+        rule.apply(primeInstrument, instruments, builder);
 
         verify(builder).withField(eq(InstrumentFields.MARKET), eq("PB_PRIME"));
         verify(builder).withField(eq(InstrumentFields.LABEL), eq("Lead 13 March 2018"));
+        verify(builder).withField(eq(InstrumentFields.TRADABLE), eq("FALSE"));
         verify(builder, times(0)).withField(eq(InstrumentFields.LAST_TRADING_DATE), any());
         verify(builder, times(0)).withField(eq(InstrumentFields.DELIVERY_DATE), any());
-        verify(builder, times(0)).withField(eq(InstrumentFields.TRADABLE), any());
     }
 
     @Test
-    public void should_set_nothing_if_no_matching_instrument() {
-        rule.apply("PB", instruments, builder);
+    public void should_set_tradable_for_lme_instrument() {
+        rule.apply(lmeInstrument, instruments, builder);
 
-        verifyZeroInteractions(builder);
+        verify(builder).withField(eq(InstrumentFields.TRADABLE), eq("TRUE"));
     }
 }

@@ -1,8 +1,8 @@
 package com.scb.app.rule;
 
+import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.builder.InstrumentBuilder;
 import com.scb.app.instrument.model.Instrument;
-import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.model.LmeInstrument;
 import com.scb.app.instrument.model.PrimeInstrument;
 import org.mockito.Mock;

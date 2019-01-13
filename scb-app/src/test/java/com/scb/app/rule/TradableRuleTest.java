@@ -10,7 +10,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyZeroInteractions;
 
 public class TradableRuleTest extends RuleTestBase {
 
@@ -24,23 +23,22 @@ public class TradableRuleTest extends RuleTestBase {
     }
 
     @Test
-    public void should_set_tradable_from_matching_instrument() {
+    public void should_set_tradable_as_true_for_lme_instrument() {
         List<Instrument> instruments = new ArrayList<>(8);
-        instruments.add(lmeInstrument);
         instruments.add(primeInstrument);
 
-        rule.apply("PRIME", instruments, builder);
+        rule.apply(lmeInstrument, instruments, builder);
 
-        verify(builder).withField(eq(InstrumentFields.TRADABLE), eq("FALSE"));
+        verify(builder).withField(eq(InstrumentFields.TRADABLE), eq("TRUE"));
     }
 
     @Test
-    public void should_no_set_tradable_if_no_matching_instrument() {
+    public void should_set_tradable_from_input_instrument() {
         List<Instrument> instruments = new ArrayList<>(8);
         instruments.add(lmeInstrument);
 
-        rule.apply("PRIME", instruments, builder);
+        rule.apply(primeInstrument, instruments, builder);
 
-        verifyZeroInteractions(builder);
+        verify(builder).withField(eq(InstrumentFields.TRADABLE), eq("FALSE"));
     }
 }

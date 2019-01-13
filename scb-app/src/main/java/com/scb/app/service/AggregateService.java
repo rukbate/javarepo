@@ -1,7 +1,7 @@
 package com.scb.app.service;
 
 import com.scb.app.exception.InstrumentException;
-import com.scb.app.exception.NoMatchedInstrumentException;
+import com.scb.app.exception.InvalidMappingException;
 import com.scb.app.exception.UnknownExchangeException;
 import com.scb.app.instrument.InstrumentFields;
 import com.scb.app.instrument.InstrumentType;
@@ -21,14 +21,8 @@ public class AggregateService implements InstrumentService {
     private Set<Instrument> instruments = ConcurrentHashMap.newKeySet(10);
     private List<Rule> rules = new CopyOnWriteArrayList<>();
 
-    public AggregateService(List<Rule> rules, List<Instrument> instruments) {
-        this.instruments.addAll(instruments);
+    public AggregateService(List<Rule> rules) {
         this.rules.addAll(rules);
-    }
-
-    @Override
-    public void addInstrument(Instrument instrument) {
-        instruments.add(instrument);
     }
 
     @Override
@@ -37,22 +31,30 @@ public class AggregateService implements InstrumentService {
     }
 
     @Override
-    public Instrument publish(String exchange, String code) throws InstrumentException {
-        InstrumentType instrumentType = InstrumentType.fromName(exchange);
-        if(instrumentType == null) {
+    public Instrument publish(Instrument instrument) throws InstrumentException {
+        InstrumentType instrumentType = instrument.getType();
+        if (!instrumentType.isExchange()) {
             throw new UnknownExchangeException();
         }
 
-        List<Instrument> matchInstruments = instruments.stream()
-                .filter(instrument -> instrument.match(code)).collect(Collectors.toList());
-
-        if (matchInstruments.isEmpty()) {
-            throw new NoMatchedInstrumentException();
+        String mappingValue = instrument.getMappingValue();
+        if(mappingValue == null) {
+            throw new InvalidMappingException();
         }
 
-        InstrumentBuilder builder = new StandardInstrumentBuilder().withField(InstrumentFields.CODE, code);
+        List<Instrument> existingInstruments = instruments.stream()
+                .filter(ins -> ins.match(mappingValue)).collect(Collectors.toList());
 
-        rules.forEach(rule -> rule.apply(exchange, matchInstruments, builder));
+        this.addInstrument(instrument);
+
+        InstrumentBuilder builder = new StandardInstrumentBuilder()
+                .withField(InstrumentFields.CODE, instrument.getMappingValue());
+
+        rules.forEach(rule -> rule.apply(instrument, existingInstruments, builder));
         return builder.build();
+    }
+
+    private void addInstrument(Instrument instrument) {
+        instruments.add(instrument);
     }
 }
